@@ -1,0 +1,23 @@
+                    #Transfer App 
+
+1. Home page contains table with 5 fresh transfer
+2. Table should look like below
+
+        Account Holder | IBAN                        | Date         | Amount      | Note
+        ---------------|-----------------------------|--------------|-------------|-------------------
+        Tanmay Ingole  | DE12 5001 0517 0648 4898 90 | 24.12.1990   | 1.111,11 €  |  My first transfer 
+                       |                             |              |             | 
+            
+3. "create" button for new form by opeinig modal. OnSaving that form should create new UUID
+4. edit button to update form by opeinig modal.
+5. delete entry by clicking delete button, prompt for confirmation.
+6. validation for adding or editing form.
+            -- Date: required, German date format, instant in the future
+            -- IBAN: required, valid IBAN according to angular-iban
+            -- Amount: required, max 8 characters, min 2 characters, max 2
+            decimal places, only numbers, "." and "," allowed, min 50 €, max
+            20.000.000 €
+            -- In case of validation errors, show a proper error message. 
+
+7. Sort the list by date and amount.
+8. Filter the list by account holder and note. 

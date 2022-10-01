@@ -1,0 +1,155 @@
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title> {{ isEdit ? "Edit" : "Create" }} Transfer</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModel(false)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <form [formGroup]="transferFormGroup" (ngSubmit)="onSubmitFormGroup()">
+        <!-- ACCOUNT HOLDER -->
+        <ion-item>
+          <ion-label position="stacked">Account Holder</ion-label>
+          <ion-input
+            type="text"
+            placeholder="Account holder name"
+            formControlName="accountHolder"
+          ></ion-input>
+          <div
+            *ngIf="
+              getTransferForm['accountHolder'].invalid &&
+              (getTransferForm['accountHolder'].dirty ||
+                getTransferForm['accountHolder'].touched)
+            "
+          >
+            <ion-badge
+              color="warning"
+              *ngIf="getTransferForm['accountHolder'].errors?.['required']"
+              >Name is required</ion-badge
+            >
+            <ion-badge
+              color="danger"
+              *ngIf="getTransferForm['accountHolder'].errors?.['accountHolder']"
+              >Name is invalid</ion-badge
+            >
+          </div>
+        </ion-item>
+
+        <!-- IBAN -->
+        <ion-item>
+          <ion-label position="stacked">IBAN</ion-label>
+          <ion-input
+            type="text"
+            placeholder="Enter IBAN number"
+            formControlName="iban"
+            required
+          ></ion-input>
+          <div
+            *ngIf="
+              getTransferForm['iban'].invalid &&
+              (getTransferForm['iban'].dirty || getTransferForm['iban'].touched)
+            "
+          >
+            <ion-badge
+              color="warning"
+              *ngIf="getTransferForm['iban'].errors?.['required']"
+              >IBAN is required</ion-badge
+            >
+            <ion-badge
+              color="danger"
+              *ngIf="getTransferForm['iban'].errors?.['iban']"
+              >IBAN is invalid</ion-badge
+            >
+          </div>
+        </ion-item>
+
+        <!-- DATE -->
+        <ion-item>
+          <ion-label position="stacked">Date</ion-label>
+          <ion-input
+            type="text"
+            placeholder="DD.MM.JJJJ"
+            formControlName="date"
+          ></ion-input>
+
+          <div
+            *ngIf="
+              getTransferForm['date'].invalid &&
+              (getTransferForm['date'].dirty || getTransferForm['date'].touched)
+            "
+          >
+            <ion-badge
+              color="warning"
+              *ngIf="getTransferForm['date'].errors?.['required']"
+              >Date is required</ion-badge
+            >
+            <ion-badge
+              color="danger"
+              *ngIf="getTransferForm['date'].errors?.['pattern']"
+              >Date format is invalid</ion-badge
+            >
+          </div>
+        </ion-item>
+
+        <!-- AMOUNT -->
+        <ion-item>
+          <ion-label position="stacked">Amount</ion-label>
+          <ion-input
+            type="text"
+            placeholder="Enter amount Eg. 20000"
+            formControlName="amount"
+          ></ion-input>
+
+          <div
+            *ngIf="
+              getTransferForm['amount'].invalid &&
+              (getTransferForm['amount'].dirty ||
+                getTransferForm['amount'].touched)
+            "
+          >
+            <ion-badge
+              color="warning"
+              *ngIf="getTransferForm['amount'].errors?.['required']"
+              >Amount is required</ion-badge
+            >
+            <ion-badge
+              color="danger"
+              *ngIf="getTransferForm['amount'].errors?.['pattern']"
+              >Please enter amount in number form. Eg. 1234</ion-badge
+            >
+            <ion-badge
+              color="danger"
+              *ngIf="!getTransferForm['amount'].errors?.['pattern'] && getTransferForm['amount'].errors?.['minlength']"
+              >Amount must be more than 1 digit</ion-badge
+            >
+            <ion-badge
+              color="danger"
+              *ngIf="!getTransferForm['amount'].errors?.['pattern'] && getTransferForm['amount'].errors?.['maxlength']"
+              >Amount must not be more than 8 digits</ion-badge
+            >
+          </div>
+        </ion-item>
+
+        <!-- NOTES -->
+        <ion-item>
+          <ion-label position="stacked">Note</ion-label>
+          <ion-textarea
+            type="text"
+            placeholder="Write note"
+            formControlName="note"
+          ></ion-textarea>
+        </ion-item>
+        <br />
+
+        <!-- BUTTONS -->
+        <ion-button type="submit" [disabled]="transferFormGroup.invalid">
+          {{ isEdit ? "Save" : "Submit" }}
+        </ion-button>
+        <ion-button (click)="resetForm()">Reset</ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -1,0 +1,53 @@
+<!-- HEADER -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Transfer App</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- TOOLBAR -->
+<ion-toolbar>
+  <ion-button slot="start" (click)="openFormModel()">
+    <ion-icon slot="start" name="add-outline"></ion-icon>
+    Create
+  </ion-button>
+  <ion-searchbar
+    [debounce]="500"
+    (ionChange)="handleChange($event)"
+  ></ion-searchbar>
+  <ion-buttons slot="end">
+    <ion-select placeholder="Sort" (ionChange)="onSort($event)">
+      <ion-select-option *ngFor="let transfer of transfersSort">
+        {{ transfer.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-buttons>
+</ion-toolbar>
+
+<!-- TABLE CONTENT -->
+<ion-content>
+  <ion-grid class="table-margin" *ngIf="transfers?.length !== 0; else loading">
+    <ion-row>
+      <ion-col size="2">Account Holder</ion-col>
+      <ion-col size="2">IBAN</ion-col>
+      <ion-col size="2">Date</ion-col>
+      <ion-col size="2">Amount</ion-col>
+      <ion-col size="2">Note</ion-col>
+      <ion-col size="2">Action</ion-col>
+    </ion-row>
+    <transfer-table
+      *ngFor="
+        let transfer of transfers | filter: filterString | sort: sortDirection
+      "
+      [transfer]="transfer"
+      (removeListItem)="onDelete($event)"
+      (editListItem)="onEdit($event)"
+    ></transfer-table>
+  </ion-grid>
+  <ng-template #loading>
+    <ion-card>
+      <div class="no-transfer">no transfer done yet 😕😕😕</div>
+    </ion-card>
+  </ng-template>
+  <transfer-form (transferFormObj)="submitForm($event)"></transfer-form>
+</ion-content>
