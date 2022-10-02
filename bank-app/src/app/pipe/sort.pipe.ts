@@ -15,16 +15,16 @@ export class SortPipe implements PipeTransform {
       return transfers;
     }
     if (sortDirection.includes('Amount')) {
-      return transfers.sort((a, b) => a.amount - b.amount);
+      return [...transfers].sort((a, b) => a.amount - b.amount);
     }
     if (sortDirection.includes('Date')) {
-      return transfers.sort((a, b) => {
-        let datessA: any = a.date;
-        let datessB: any = b.date;
+      return [...transfers].sort((a, b) => {
+        let datessA = a.date;
+        let datessB = b.date;
         datessA = datessA.toString().split('.').reverse().join('-');
         datessB = datessB.toString().split('.').reverse().join('-');
-        let d1 = new Date(datessA) as any;
-        let d2 = new Date(datessB) as any;
+        let d1: any = new Date(datessA);
+        let d2: any = new Date(datessB);
         return d1 - d2;
       });
     }

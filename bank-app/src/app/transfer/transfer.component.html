@@ -17,7 +17,7 @@
   ></ion-searchbar>
   <ion-buttons slot="end">
     <ion-select placeholder="Sort" (ionChange)="onSort($event)">
-      <ion-select-option *ngFor="let transfer of transfersSort">
+      <ion-select-option *ngFor="let transfer of sortFields">
         {{ transfer.name }}
       </ion-select-option>
     </ion-select>
@@ -26,24 +26,26 @@
 
 <!-- TABLE CONTENT -->
 <ion-content>
-  <ion-grid class="table-margin" *ngIf="transfers?.length !== 0; else loading">
-    <ion-row>
-      <ion-col size="2">Account Holder</ion-col>
-      <ion-col size="2">IBAN</ion-col>
-      <ion-col size="2">Date</ion-col>
-      <ion-col size="2">Amount</ion-col>
-      <ion-col size="2">Note</ion-col>
-      <ion-col size="2">Action</ion-col>
-    </ion-row>
-    <transfer-table
-      *ngFor="
-        let transfer of transfers | filter: filterString | sort: sortDirection
-      "
-      [transfer]="transfer"
-      (removeListItem)="onDelete($event)"
-      (editListItem)="onEdit($event)"
-    ></transfer-table>
-  </ion-grid>
+  <div *ngIf="transfers$ | async as transfers">
+    <ion-grid class="table-margin" *ngIf="transfers.length > 0; else loading">
+      <ion-row>
+        <ion-col size="2">Account Holder</ion-col>
+        <ion-col size="2">IBAN</ion-col>
+        <ion-col size="2">Date</ion-col>
+        <ion-col size="2">Amount</ion-col>
+        <ion-col size="2">Note</ion-col>
+        <ion-col size="2">Action</ion-col>
+      </ion-row>
+      <transfer-table
+        *ngFor="
+          let transfer of transfers | filter: filterString | sort: sortDirection
+        "
+        [transfer]="transfer"
+        (removeListItem)="onDelete($event)"
+        (editListItem)="onEdit($event)"
+      ></transfer-table>
+    </ion-grid>
+  </div>
   <ng-template #loading>
     <ion-card>
       <div class="no-transfer">no transfer done yet 😕😕😕</div>

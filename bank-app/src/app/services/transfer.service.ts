@@ -42,12 +42,14 @@ export class TransferService {
     );
   }
 
-  updateTransfer(id: string, transfer: ITransfer): Observable<ITransfer> {
-    return this.http.put<ITransfer>(`${this.API_URL}/${id}`, transfer).pipe(
-      catchError((error) => {
-        return throwError(() => error);
-      })
-    );
+  updateTransfer(transfer: ITransfer): Observable<ITransfer> {
+    return this.http
+      .put<ITransfer>(`${this.API_URL}/${transfer.id}`, transfer)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
   }
 
   deleteTransfer(transferID: string): Observable<ITransfer> {

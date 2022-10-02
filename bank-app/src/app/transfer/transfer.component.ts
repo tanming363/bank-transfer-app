@@ -1,7 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+
+import { select, Store } from '@ngrx/store';
+
+import { Observable, Subscription } from 'rxjs';
 import { ITransfer } from '../models/transfer.model';
+import {
+  invokeDeleteTransferAPI,
+  invokeSaveTransferAPI,
+  invokeTransferAPI,
+  invokeUpdateTransferAPI,
+} from '../ngrx/store/transfer.action';
+
+import { selectTransfers } from '../ngrx/store/transfer.selector';
 import { TransferService } from '../services/transfer.service';
 
 @Component({
@@ -12,14 +23,15 @@ import { TransferService } from '../services/transfer.service';
 export class TransferComponent implements OnInit {
   isModalOpen: boolean = false;
   isEdit: boolean = false;
-  transfers!: ITransfer[];
   id!: string;
   editData!: ITransfer;
   subscription!: Subscription;
   filterString: string = '';
   sortDirection: any;
 
-  transfersSort = [
+  transfers$ = this.store.pipe(select(selectTransfers));
+
+  sortFields = [
     {
       name: 'Date',
     },
@@ -30,20 +42,15 @@ export class TransferComponent implements OnInit {
 
   constructor(
     private transferService: TransferService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
     this.transferService.isEditSubject$.subscribe((res) => {
       this.isEdit = res;
     });
-    this.getAllTransfer();
-  }
-
-  getAllTransfer() {
-    this.subscription = this.transferService.getTransfers().subscribe((res) => {
-      this.transfers = res;
-    });
+    this.store.dispatch(invokeTransferAPI());
   }
 
   async onDelete(id: string) {
@@ -55,8 +62,7 @@ export class TransferComponent implements OnInit {
         {
           text: 'Delete',
           handler: () => {
-            this.transferService.deleteTransfer(id).subscribe();
-            this.getAllTransfer();
+            this.store.dispatch(invokeDeleteTransferAPI({ id: id }));
           },
         },
       ],
@@ -65,10 +71,9 @@ export class TransferComponent implements OnInit {
   }
 
   updateForm(data: ITransfer) {
-    this.transferService.updateTransfer(this.id, data).subscribe({
-      next: () => (this.isModalOpen = false),
-      error: (e) => console.error(e),
-      complete: () => console.info('complete'),
+    this.store.dispatch(invokeUpdateTransferAPI({ transfer: { ...data } }));
+    setTimeout(() => {
+      this.isModalOpen = false;
     });
   }
 
@@ -76,16 +81,18 @@ export class TransferComponent implements OnInit {
     this.id = data.id;
     this.isModalOpen = true;
     this.transferService.modelOpen(this.isModalOpen);
-    this.updateForm(data);
+    this.isEdit = true;
   }
 
   submitForm(data: ITransfer) {
-    if (this.isEdit && !this.isModalOpen) {
+    if (this.isEdit) {
+      data.id = this.id;
       this.updateForm(data);
+      this.isEdit = false;
     } else {
-      this.transferService.createTransfer(data).subscribe();
+      this.store.dispatch(invokeSaveTransferAPI({ transfer: { ...data } }));
     }
-    this.getAllTransfer();
+    this.store.dispatch(invokeTransferAPI());
   }
 
   openFormModel() {

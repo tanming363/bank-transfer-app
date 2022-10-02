@@ -1,8 +1,8 @@
-<ion-modal [isOpen]="isModalOpen">
+<ion-modal [isOpen]="isModalOpen" [backdropDismiss]="false">
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title> {{ isEdit ? "Edit" : "Create" }} Transfer</ion-title>
+        <ion-title> {{ isEdit ? "Update" : "Create" }} Transfer</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="closeModel(false)">Close</ion-button>
         </ion-buttons>
@@ -70,7 +70,7 @@
         <ion-item>
           <ion-label position="stacked">Date</ion-label>
           <ion-input
-            type="text"
+            type="date"
             placeholder="DD.MM.JJJJ"
             formControlName="date"
           ></ion-input>
@@ -146,7 +146,7 @@
 
         <!-- BUTTONS -->
         <ion-button type="submit" [disabled]="transferFormGroup.invalid">
-          {{ isEdit ? "Save" : "Submit" }}
+          {{ isEdit ? "Save Changes" : "Submit" }}
         </ion-button>
         <ion-button (click)="resetForm()">Reset</ion-button>
       </form>

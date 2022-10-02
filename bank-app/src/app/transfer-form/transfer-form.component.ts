@@ -36,19 +36,10 @@ export class TransferFormComponent implements OnInit {
       this.isEdit = res;
     });
     this.transferService.transferIDSubject$.subscribe((transferid) => {
-      // this.tranferID = transferid;
       this.transferService.getTransfer(transferid).subscribe((res) => {
-        const date = this.germanDateFormat(res.date);
-
-        // const amm=  res.amount.toLocaleString("de-DE", {
-        //     currency: "EUR",
-        //     style: "currency",
-        //     symbol: "€",
-        //   });
-
         this.getTransferForm['accountHolder'].setValue(res.accountHolder);
         this.getTransferForm['iban'].setValue(res.iban);
-        this.getTransferForm['date'].setValue(date);
+        this.getTransferForm['date'].setValue(res.date);
         this.getTransferForm['amount'].setValue(res.amount);
         this.getTransferForm['note'].setValue(res.note);
       });
@@ -75,6 +66,7 @@ export class TransferFormComponent implements OnInit {
       date: new FormControl('', [Validators.required]),
       amount: new FormControl('', [
         Validators.required,
+        Validators.pattern('^[0-9]*$'),
         Validators.minLength(2),
         Validators.maxLength(8),
       ]),

@@ -13,6 +13,10 @@ import { TransferFormModule } from '../transfer-form/transfer-form.module';
 import { TransferModalModule } from '../transfer-modal/transfer-modal.module';
 import { FilterPipe } from '../pipe/filter.pipe';
 import { SortPipe } from '../pipe/sort.pipe';
+import { StoreModule } from '@ngrx/store';
+import { transferReducer } from '../ngrx/store/transfer.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { TransferEffects } from '../ngrx/store/transfer.effects';
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
@@ -25,6 +29,8 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     TransferTableModule,
     TransferFormModule,
     TransferModalModule,
+    StoreModule.forFeature('mytransfers', transferReducer),
+    EffectsModule.forFeature([TransferEffects]),
   ],
   declarations: [TransferComponent, FilterPipe, SortPipe],
   providers: [
